@@ -1,0 +1,52 @@
+What is “Page” (Page Object) really?
+
+It’s just a place to group:
+
+locators
+actions
+-----
+Why we use Page (real reason, not theory)
+1) To remove repetition
+2) To make tests readable like user behavior
+3) To isolate UI changes
+If tomorrow the selector changes:
+
+<input name="email">
+
+becomes:
+
+<input id="user-email">
+
+Without Page:
+❌ you fix it in 10 tests
+
+With Page:
+✅ you fix it in one place
+------------------------
+Important: what Page is NOT
+❌ not for assertions (usually)
+❌ not for business logic
+❌ not for everything in the project
+❌ not required for small tests
+
+It’s just:
+👉 UI interaction layer
+--------------
+--------------
+add to cart inside
+  await blockAds(this.page)
+
+  await this.page.goto('/products')
+
+  const productWrapper = this.page
+    .locator('.single-products')
+    .filter({ hasText: product })
+    .first()
+
+  await productWrapper.scrollIntoViewIfNeeded()
+  await productWrapper.hover()
+
+  const addToCartBtn = productWrapper.locator('.overlay-content .add-to-cart')
+
+  await addToCartBtn.waitFor({ state: 'visible' })
+  await addToCartBtn.click()

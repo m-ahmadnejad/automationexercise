@@ -1,0 +1,233 @@
+A fixture is like:
+
+setup
+prepared object
+reusable dependency
+----------
+nothing (just prepares state)
+data (like a user)
+object (like a page object)
+function (like a reusable action)
+----------
+
+It saves you from rewriting the same setup in every test.
+
+---Why fixtures are useful
+
+Fixtures help with 4 main things:
+
+1. Reuse
+
+You don’t repeat setup code in every test.
+
+2. Clean tests
+
+Tests focus on scenario, not setup noise.
+
+3. Consistency
+
+All tests create things the same way.
+
+4. Dependency management
+
+One fixture can depend on another.
+
+Example:
+
+createdUser
+--------------------------------
+Super important mental model
+Before use(...)
+
+This is setup
+
+use(value)
+
+This gives the fixture to the test
+
+After use(...)
+
+This is teardown / cleanup
+
+Example:
+
+createdUser: async ({ request }, use) => {
+  const user = await createUser(request, payload)
+
+  await use(user)
+
+  await deleteUser(request, user)
+}------------------------------------------------------------
+What should go in fixtures?
+Good in fixtures
+reusable setup
+page objects
+test data creation
+API setup
+environment preparation
+Bad in fixtures
+actual assertions
+too much business logic
+hidden test behavior
+one-off steps used in only one test
+----------------------------------------
+There are 2 ways to classify fixtures:
+
+1. By purpose (what they do) ✅ MOST IMPORTANT FOR YOU
+ 🟦 1. Page Fixtures (UI fixtures)
+ 🟩 2. API Fixtures  / value fixtures
+ 3. State / Setup Fixtures                 loggedInUser: async ({ page, createdUser }, use) => {
+🟥 4. Flow / Workflow Fixtures (ADVANCED ⚠️)
+}
+2. By lifecycle/scope (how often they run) 🔧 advanced
+
+We focus mainly on purpose, because that’s what you use daily.
+--------------------------------------
+async ({ page, request, createdUser }, use)
+
+This means:
+
+👉 “I need these things to build my fixture”
+they are input 
+----
+This line defines output:
+
+await use(value)
+
+That value becomes available in your test.
+------------------------------------
+before use → setup
+after use → cleanup
+-----------------------------------
+The “output type” of a fixture means:
+
+what this fixture gives to the test or to other fixtures.
+
+For example, a fixture can output:
+
+void
+string
+number
+boolean
+object types
+array types
+function types
+class instance types
+union types
+custom interface/type aliases
+
+
+*************
+*************
+1. void
+
+Use void when the fixture does some setup, but does not return any usable value.
+
+Example:
+
+type MyFixtures = {
+  loggedInUser: void
+}
+
+loggedInUser: async ({ page, loginPage }, use) => {
+  await page.goto('/login')
+  await loginPage.login('a@test.com', '123')
+  await use()
+}
+What this means
+
+The fixture only prepares state:
+
+user is logged in
+page is ready
+
+But the test does not receive any fixture value.
+$$$$$$$$$$$$
+When to use void
+
+Use void when the fixture is only for:
+
+setup
+navigation
+login state
+page preparation
+environment preparation
+**************************************
+2. Object type
+
+This is the most common useful fixture output.
+
+Example:
+
+type MyFixtures = {
+  createdUser: CreateUserResult
+}
+createdUser: async ({ request }, use) => {
+  const user = await createUser(request)
+  await use(user)
+}
+$$$$$$$$$$$$$$$$$$$$$$$
+When to use object type
+
+Use it when the fixture creates or prepares data that other code needs.
+
+Examples:
+
+created user
+API response
+payment result
+test account
+order data
+****************************************
+3. Function type
+
+A fixture can return a function.
+
+Example:
+
+type MyFixtures = {
+  goToPayment: () => Promise<void>
+}
+goToPayment: async ({ productPage, checkoutPage }, use) => {
+  await use(async () => {
+    await productPage.addItem()
+    await checkoutPage.continue()
+  })
+}
+*****************************************
+4. Primitive types
+
+You can return simple types too.
+
+Example:
+
+type MyFixtures = {
+  generatedEmail: string
+}
+generatedEmail: async ({}, use) => {
+  const email = generateEmail('mojgan')
+  await use(email)
+}
+**********************************************
+5. Page object / class instance type
+
+Very common in Playwright.
+
+Example:
+
+type PageFixtures = {
+  loginPage: LoginPage
+}
+loginPage: async ({ page }, use) => {
+  await use(new LoginPage(page))
+}
+
+$$$$$$$$$$$$$$$$$$$$$$$
+When to use it
+
+Use it for:
+
+page objects
+helper classes
+service classes
+****************************************************

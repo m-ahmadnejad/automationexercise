@@ -1,0 +1,34 @@
+
+
+npx playwright test test/e2e/order --workers=1 --trace=on
+3️⃣ --workers=1 (خیلی مهم 🔥)
+
+یعنی:
+👉 تست‌ها parallel اجرا نشن
+👉 دونه دونه و پشت سر هم اجرا بشن
+
+4️⃣ --trace=on (سوپر مهم 🔥🔥)
+
+یعنی:
+👉 برای هر تست یه record کامل بگیر:
+
+داخلش هست:
+
+همه click ها
+navigation ها
+network request ها
+screenshot step-by-step
+console log
+DOM snapshot
+
+-------------------
+بعدش چی میشه؟
+
+بعد از اجرا:
+
+npx playwright show-report
+
+بعد:
+
+👉 روی تست fail شده کلیک کن
+👉 "Trace" رو باز کن

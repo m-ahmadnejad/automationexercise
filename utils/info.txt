@@ -1,0 +1,138 @@
+🧠 اصلاً route چیه؟
+
+👉 route = یه درخواست (request) که صفحه می‌خواد به اینترنت بفرسته
+
+page میگه:
+- بده html
+- بده css
+- بده عکس
+- بده api
+- بده تبلیغ ❗
+-----------------------------
+🧠 حالا page.route چی میشه؟
+page.route(...)
+
+👉 یعنی:
+
+"هر request (route) که اومد → بده به من"
+-------------------
+👉 route ≈ request
+
+🔍 ولی یه نکته کوچیک مهم داره
+🔹 request چیه؟
+
+👉 خود درخواستیه که صفحه میفرسته:
+
+GET /api/products
+🔹 route چیه؟
+
+👉 همون request ـه + یه قابلیت اضافه:
+
+"می‌تونی جلوش رو بگیری یا تغییرش بدی"
+
+
+page.on('request', req => {
+  console.log(req.url())
+})
+
+👉 فقط نگاه می‌کنی 👀
+
+page.route('**/*', route => {
+  route.abort()
+})
+
+👉 کنترل می‌کنی ✋
+----------
+route is an intercepted request that you can control
+-------------------------
+🔁 این دوتا با هم:
+page → request → server → response → page
+🔹 3️⃣ route (رُوت)
+
+👉 route جاییه که تو وسط این جریان وایمیستی
+
+page → 🚫 route → server
+🔥 یعنی چی؟
+
+👉 route بهت اجازه میده:
+
+request رو ببینی
+جلوش رو بگیری
+تغییرش بدی
+---------=============
+👀 فقط نگاه کردن (request)
+page.on('request', req => {
+  console.log(req.url())
+})
+
+👉 فقط می‌بینی → هیچ کاری نمی‌کنی
+
+🛑 کنترل کردن (route)
+await page.route('**/*', route => {
+  route.abort()
+})
+
+👉 request رو قطع می‌کنی ❌
+
+📥 دیدن جواب (response)
+page.on('response', res => {
+  console.log(res.status())
+})
+
+👉 جواب سرور رو می‌بینی
+A request is sent from the browser, a response is returned from the server,
+ and route allows us to intercept and control the request before it reaches the server. 
+ ===============
+ ================
+ تو میگی:
+
+👉 لازم نیست بری سرور
+👉 من خودم جواب میدم
+
+✨ کدش:
+await page.route('**/api/products', async route => {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      products: [
+        { name: 'Fake Product', price: 100 }
+      ]
+    })
+  })
+})
+
+
+🧠 چرا این خیلی مهمه؟
+✅ 1. تست سریع‌تر
+
+بدون اینترنت / بدون سرور
+
+✅ 2. تست قابل پیش‌بینی
+
+دیگه این مشکل رو نداری:
+
+گاهی API کند بود
+گاهی data عوض شد
+✅ 3. ساختن سناریوهای خاص
+
+مثلاً:
+
+status: 500
+
+👉 تست error
+
+🔥 تفاوتش با بقیه
+متد	کاری که می‌کنه
+route.continue()	بذار request بره
+route.abort()	قطعش کن
+route.fulfill()	خودت جواب بده 😎
+🧠 یه تشبیه ساده
+request = سفارش غذا
+حالت	معنی
+continue	سفارش بده به رستوران
+abort	کنسل کن
+fulfill	خودت غذا رو بپز 🍳
+🎯 جمله حرفه‌ای برای مصاحبه
+
+route.fulfill() allows us to mock network responses and simulate backend behavior without calling the real API.
