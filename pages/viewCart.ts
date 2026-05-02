@@ -1,16 +1,16 @@
 import { Locator, Page,expect } from '@playwright/test'
-import { ProductItem } from '../data/checkout.data'
+import { ProductItem, ProductItemResult } from '../data/checkout.data'
 export class ViewCartPage {
   constructor(private page: Page) {}
 
-  async getCartItems(): Promise<ProductItem[]> {
-    const results: ProductItem[] = []
+  async getCartItems(): Promise<ProductItemResult []> {
+    const results: ProductItemResult[] = []
     const row = this.getRows()
     console.log('row******',row)
     const count:number = await row.count()
     console.log('count******',count)
    for(let index=0; index<count; index++){
-      const wrapper = this.getRows().first()
+      const wrapper = this.getRows().nth(index)
       const productName = (await wrapper.locator('.cart_description h4 a').textContent())?.trim() || ''
        console.log('view cart product name',productName)
       const productRawPrice = (await wrapper.locator('.cart_price p').textContent())?.trim() || ''
@@ -43,6 +43,7 @@ async removeCartItems(){
     console.log('count******',count)
    for(let index=0; index<count; index++){
         const beforeCount = await this.getRows().count()
+        console.log('befor count &&',beforeCount)
       const wrapper = this.getRows().first()
         console.log('******wrapper in remove',wrapper)
         await wrapper.waitFor({state:'visible'})
@@ -50,6 +51,7 @@ async removeCartItems(){
         
         //await expect(wrapper).not.toBeAttached()
         //inside page file dont use assertions
+        console.log('getwros befor end &&&&&&&&&',await this.getRows().count())
     await expect(this.getRows()).toHaveCount(beforeCount - 1)
      }
 
@@ -86,5 +88,15 @@ async goToCart(){
    getRows():Locator{
   return  this.page.locator('tr[id^="product-"]')
 }
+
+  async getProductId(row: Locator): Promise<number> {
+    const id = await row.getAttribute('id')
+    if (!id) throw new Error('Missing product id')
+
+    const match = id.match(/\d+/)
+    if (!match) throw new Error(`Invalid id format: ${id}`)
+
+    return Number(match[0])
+  }
 
 }

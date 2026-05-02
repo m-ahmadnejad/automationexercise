@@ -5,10 +5,15 @@ export class ProductPage {
     this.page = page
   }
 async addToCart(productId: number) {
-  await this.page
-    .locator(`a.add-to-cart[data-product-id="${productId}"]`)
-    .first()
-    .click({ force: true })
+  const productCard = this.page.locator('.product-image-wrapper').filter({has: this.page.locator(`a.add-to-cart[data-product-id="${productId}"]`),}).first()
+
+  const btn = productCard.locator(`.productinfo a.add-to-cart[data-product-id="${productId}"]`)
+
+  await btn.scrollIntoViewIfNeeded()
+  await btn.click()
+  const modalWrapper = this.page.locator('#cartModal').first()
+
+  await expect(modalWrapper).toBeVisible()
 }
 
   async continueShopping() {
@@ -19,6 +24,7 @@ async addToCart(productId: number) {
   async viewCart() {
     console.log('view cart ((((((')
     await this.page.getByText('View Cart').click()
+    console.log('url after view cart click',this.page.url())
   }
 
   getAddedMessage(): Locator {

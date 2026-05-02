@@ -15,17 +15,20 @@ await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 15000 })
 
 test('should display correct cart details for multiple products', async ({page, productPage,loggedInUser, viewCartPage }) =>{
       console.log('START TEST URL:', page.url())
-      
+       
     await test.step('ensure cart is empty',async({})=>{
+        console.log('ensure cart is empty')
          await viewCartPage.goToCart()
          await viewCartPage.removeAllItems()
 
     })
     await test.step('add multiple items to cart', async () => { 
+        console.log('add multiple items to cart')
         await page.goto('https://automationexercise.com/products')
         await addMultipleProducts(multipleCartItems,productPage,page)
      })
      await test.step('verify cart items', async () => { 
+        console.log('verify cart items')
          const cartItems = await viewCartPage.getCartItems()
          console.log('cartItems*********',cartItems)
          console.log('multiple cart items', multipleCartItems)
@@ -35,10 +38,10 @@ test('should display correct cart details for multiple products', async ({page, 
          })
         test('should display correct cart details for single product', async ({ productPage,loggedInUser,viewCartPage }) => {
             await test.step('add single item to cart', async () => { 
-            await productPage.addToCart(singleCartItems[0].name) })
+            await productPage.addToCart(multipleCartItems[0].productId) })
             await productPage.viewCart()
             const cartItems = await viewCartPage.getCartItems()
-         console.log('cartItems*********',cartItems,singleCartItems[0].name)
+         console.log('cartItems*********',cartItems,multipleCartItems[0].productId)
          console.log('multiple cart items', singleCartItems)
          expect(cartItems).toHaveLength(singleCartItems.length)
         await expectCartItemsToMatch(cartItems, singleCartItems)

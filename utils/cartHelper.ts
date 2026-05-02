@@ -1,5 +1,5 @@
 import { ProductPage } from "../pages/productPage"
-import { ProductItem } from "../data/checkout.data"
+import { ProductItem, ProductItemResult } from "../data/checkout.data"
 import { ViewCartPage } from "../pages/viewCart"
 import { expect,Page } from "@playwright/test"
 
@@ -8,9 +8,8 @@ import { expect,Page } from "@playwright/test"
         for(const [index,item] of items.entries()){
             console.log('items.entites 888888&&&&&&&&&&&&&&&&&&',items.entries())
             console.log('items and index******',index,item)
-            await productPage.addToCart(item.id)
-            console.log('item.name^^^^',item.name
-            )
+            await productPage.addToCart(item.productId)
+            console.log('item.name^^^^',item.name,item.productId)
             if(index<items.length -1){
                 console.log('conitinue shopping ###########')
                  await productPage.continueShopping()
@@ -20,7 +19,7 @@ import { expect,Page } from "@playwright/test"
     }
 //one is extra
 
-export async function verifyItemsInCart(viewCartPage:ViewCartPage,expectedItem:ProductItem[]) {
+export async function verifyItemsInCart(viewCartPage:ViewCartPage,expectedItem:ProductItemResult[]) {
         const uiItems = await viewCartPage.getCartItems()
         console.log('uitemsOOOOOO',uiItems)
         expect(uiItems).toHaveLength(expectedItem.length)
@@ -29,7 +28,7 @@ export async function verifyItemsInCart(viewCartPage:ViewCartPage,expectedItem:P
         
 }
 //the secnd one is better than the
-export function expectCartItemsToMatch(uiItems: ProductItem[],expectedItems: ProductItem[]) {
+export function expectCartItemsToMatch(uiItems: ProductItemResult[],expectedItems: ProductItemResult[]) {
   for (const expectedItem of expectedItems) {
     const matched = uiItems.find(p => p.name === expectedItem.name)
     console.log('uiitemsssss',uiItems)
@@ -50,5 +49,5 @@ export async function expectEmptyCartState(viewCartPage:ViewCartPage,page:Page){
                 console.log('expectEmtyCArt state funciton (((((())))))))')
                 console.log('url in expect empty caet state function',await page.url())
                 await expect(viewCartPage.getRows()).toHaveCount(0)
-  await expect(viewCartPage.proceedToCheckoutButton()).toHaveCount(0)
+  await expect(viewCartPage.proceedToCheckoutButton()).not.toBeVisible()
 }
