@@ -3,6 +3,8 @@ import { submitLogin } from '../../../utils/authHepler/authHelper'
 import { validPaymentDetails } from '../../../data/payment.data'
 import { cartworkflow } from '../../../data/workflow.data'
 import { addMultipleProducts } from '../../../utils/cartHelper'
+test.skip('flaky test',async({})=>{
+})
 test.beforeEach(async({page})=>{
    //🧠 یه جمله طلایی: 👉 evaluate یعنی:  "کدی که اینجا نوشتم، داخل صفحه (browser) اجرا بشه"
   await page.context().clearCookies()
@@ -21,7 +23,7 @@ test.beforeEach(async({page,loginPage,createdUser})=>{
 for(const c of cartworkflow){
    test(`should successfully place an order for  ${c.name} `,async({page,productPage,viewCartPage,checkoutPage,paymentDonePage,paymentPage})=>{
       await test.step(`add products to cart using ${c.name} `,async()=>{
-            await addMultipleProducts(c.data,productPage)
+            await addMultipleProducts(c.data,productPage,page)
          const cartItems = await viewCartPage.getCartItems()
          console.log('cart items in test%%%%',cartItems)
          await expect(cartItems).toHaveLength(c.data.length)

@@ -6,7 +6,7 @@ import { performSignupAndCheckNavigation } from "../../../utils/signupHelper"
 import { signUpFirstStepUsers, validSignUpSecondStepData } from '../../../data/signUp.data'
 import { multipleCartItems, singleCartItems } from '../../../data/checkout.data'
 import { expectCheckoutItemsToMatch } from '../../../utils/checkoutHelper'
-import { addMultipleProducts, expextCartItemsToMatch } from '../../../utils/cartHelper'
+import { addMultipleProducts, expectCartItemsToMatch } from '../../../utils/cartHelper'
 
 //test.use({storageState: 'playwright/.auth/user.json'})
 test.beforeEach(async ({page})=>{
@@ -28,14 +28,14 @@ test.describe('testing workflow using ui',()=>{
       await expect(page.getByText('Logged in as ')).toBeVisible()
 })
   await test.step(`add ${multipleCartItems.length} items to cart`, async({})=>{
-    await addMultipleProducts(multipleCartItems,productPage)
+    await addMultipleProducts(multipleCartItems,productPage,page)
   })
     await test.step('view cart', async({})=>{
          const uiItem = await viewCartPage.getCartItems()
                 console.log('cart ui items',uiItem)
          expect(uiItem).toHaveLength(multipleCartItems.length)
 
-      await expextCartItemsToMatch(uiItem,multipleCartItems)
+      await expectCartItemsToMatch(uiItem,multipleCartItems)
     
   })
    await test.step('checkout page review order ',async({})=>{
