@@ -1,0 +1,291 @@
+
+🔹 Main use cases
+1. Run only important tests
+npx playwright test --grep @smoke
+
+👉 Runs only critical tests
+
+2. Skip some tests
+npx playwright test --grep-invert @slow
+
+👉 Run everything except slow tests
+
+
+-----------
+----------------------
+-------------------------
+
+🧠 PART 3 — How Playwright uses tags
+Method 1 — In test title (most common)
+test('@smoke @auth user can login', async () => {})
+Method 2 — With test.describe
+test.describe('@smoke Auth tests', () => {
+  test('login', async () => {})
+})
+---------------------
+-----------------------
+-------------------------   
+
+Run multiple
+npx playwright test --grep "@smoke|@sanity"
+=============================
+
+
+v1. @smoke
+
+Purpose: quick check that the app is basically alive.
+
+Put inside:
+
+login works
+signup works
+add one product to cart
+complete one simple purchase flow
+
+Do not put:
+
+negative tests
+validation tests
+multiple product tests
+edge cases
+long flows
+
+Use:
+
+npx playwright test --grep @smoke
+
+Usually used:
+
+after deploy
+before full regression
+in CI as fast check
+--------------
+2. @sanity
+
+Purpose: quick check that one changed feature still basically works.
+
+Put inside:
+
+payment page opens
+user can submit payment
+cart opens after adding one product
+delete account success message appears
+
+Do not put:
+
+edge cases
+invalid inputs
+browser back/refresh behavior
+duplicate submission
+complex API + UI rules
+
+Use:
+
+npx playwright test --grep @sanity
+
+Usually used:
+
+after small bug fix
+after feature change
+before deeper testing
+
+----------
+3. @regression
+
+Purpose: check that existing behavior was not broken.
+
+Put inside:
+
+almost all stable tests
+positive tests
+negative tests
+validation tests
+edge cases
+cart tests
+checkout tests
+payment tests
+API tests
+E2E tests
+
+Use:
+
+npx playwright test --grep @regression
+
+Usually used:
+
+before release
+nightly run
+full CI run
+after bigger changes
+----------------------
+4. @negative
+
+Purpose: user does something invalid/wrong and system should handle it.
+
+Put inside:
+
+wrong password
+empty card number
+deleted user cannot login
+cannot access payment directly
+duplicate payment prevention
+
+Use:
+
+npx playwright test --grep @negative
+5. @ui
+
+Purpose: test mainly uses browser UI.
+
+Put inside:
+
+clicking buttons
+filling forms
+checking UI messages
+checking page navigation
+6. @api
+
+Purpose: test mainly verifies API behavior.
+
+Put inside:
+
+verifyLogin API
+createAccount API
+deleteAccount API
+responseCode checks
+
+Important rule:
+
+Tag based on what you test, not only how you set up data.
+
+If API only creates data, but the real test is UI login, use @ui, not necessarily @api.
+
+7. @e2e
+
+Purpose: user journey across multiple pages/features.
+
+Put inside:
+
+login → add cart → checkout → payment
+signup → login → purchase
+delete account through UI
+Simple mental model
+@smoke      = minimum app alive check
+@sanity     = quick check for changed feature
+@regression = full protection suite
+@negative   = invalid/wrong behavior
+@ui         = browser test
+@api        = API test
+@e2e        = multi-step user journey
+Best rule for your project
+
+Most tests:
+
+@regression
+
+Few tests:
+
+@smoke
+
+Some simple important tests:
+
+@sanity
+
+Negative cases:
+
+@negative @regression
+
+E2E flows:
+
+@e2e @regression
+==============
+🧠 2. OTHER IMPORTANT CATEGORIES (VERY IMPORTANT)
+
+These are ALSO used as tags 👇
+
+🔹 By TEST TYPE
+Category	Meaning
+@ui	frontend testing
+@api	backend testing
+@e2e	full flow
+@integration	between systems
+🔹 By TEST BEHAVIOR
+Category	Meaning
+@positive	expected success
+@negative	expected failure
+@edge	edge cases
+🔹 By FEATURE (VERY IMPORTANT)
+Category	Meaning
+@auth	login/logout
+@account	signup/delete
+@cart	cart
+@checkout	payment/order
+🔹 By SPEED (optional)
+Category	Meaning
+@fast	quick tests
+@slow	heavy tests
+-----------
+🧠 Simple mental model
+
+Think of tags like:
+
+📦 feature → account / auth
+🔧 type → api / ui
+🔄 flow → e2e
+⚠️ behavior → negative
+🛡️ suite → regression
+------------------------
+👉 Say this:
+
+“E2E testing validates complete user workflows across the system to ensure the application works as expected from a user’s perspective.”
+
+🧠 What makes something E2E (final rule)
+
+A test is E2E if:
+
+✔ It follows a real user goal
+✔ It has multiple steps
+✔ It verifies final outcome
+
+
+🧠 Even simpler mental model
+
+👉 E2E = “user story”
+
+👉 Not E2E = “small technical check”
+=================================+======
+========================================================
+VERY IMPORTANT PROFESSIONAL RULE
+
+Ask:
+
+What business capability would break this test?
+Test 1
+
+If registration/account creation breaks:
+❌ test fails
+
+If auth/login breaks:
+✅ test still passes
+
+So:
+
+@account
+
+NOT auth.
+
+Test 2
+
+If authentication/login breaks:
+❌ test fails
+
+If signup breaks:
+✅ test can still pass because fixture already created user
+
+So:
+
+@auth
+
+NOT account.
+
+This distinction is VERY senior-level QA thinking

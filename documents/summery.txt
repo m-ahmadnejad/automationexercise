@@ -1,0 +1,210 @@
+Professional Test Organization Summary
+1. Folder Structure = PRIMARY test type
+
+Folders answer:
+
+HOW is this test primarily executed?
+UI Folder
+test/ui/
+
+Use when:
+
+validation is mainly through UI
+browser interaction is the focus
+API may be setup only
+
+Examples:
+
+login.ui.spec.ts
+signup.ui.spec.ts
+
+Typical tags:
+
+@ui
+API Folder
+test/api/
+
+Use when:
+
+validation is through API
+no browser validation
+request/response testing
+
+Examples:
+
+verifyLogin.api.spec.ts
+deleteAccount.api.spec.ts
+
+Typical tags:
+
+@api
+Integration Folder
+test/integration/
+
+Use when:
+
+multiple layers interact
+UI + API together
+cross-system validation
+
+Examples:
+
+create account via UI
+→ verify via API
+
+or
+
+delete via API
+→ verify login fails in UI
+
+Typical tags:
+
+@integration @ui @api
+E2E Folder
+test/e2e/
+
+Use when:
+
+complete business journey
+full user workflow
+multi-page business flow
+
+Examples:
+
+add to cart
+→ checkout
+→ payment
+→ confirmation
+
+Typical tags:
+
+@e2e @ui
+2. Domain folders
+
+Inside test type folders:
+
+auth/
+account/
+cart/
+checkout/
+payment/
+workflow/
+
+These answer:
+
+WHAT business area is tested?
+
+Examples:
+
+ui/auth/
+api/account/
+e2e/payment/
+integration/auth/
+3. Tags = EXTRA characteristics
+
+Tags answer:
+
+What properties does this test have?
+
+NOT primary location.
+
+Common Tags
+Layer tags
+@ui
+@api
+@integration
+@e2e
+Feature/domain tags
+@auth
+@account
+@cart
+@checkout
+@payment
+Execution scope tags
+@smoke
+@regression
+@sanity
+@negative
+4. Professional Rules
+Rule 1
+
+Setup layer ≠ test layer
+
+Example:
+
+API creates user
+→ UI logs in
+→ UI verifies
+
+Still:
+
+UI test
+
+because API was setup only.
+
+Rule 2
+
+Validation layer matters most
+
+Example:
+
+delete via API
+→ verify via API
+
+is:
+
+API test
+
+NOT integration.
+
+Rule 3
+
+E2E already implies UI
+
+This is okay:
+
+@e2e @ui
+
+But folder should still be:
+
+test/e2e/
+
+NOT:
+
+test/ui/e2e/
+Rule 4
+
+Integration means CROSS-LAYER validation
+
+Example:
+
+UI create
+→ API verify
+
+or
+
+API delete
+→ UI login fail
+
+That is real integration testing.
+
+Final Professional Structure Example
+test/
+  ui/
+    auth/
+      login.ui.spec.ts
+      login.negative.ui.spec.ts
+
+  api/
+    auth/
+      verifyLogin.api.spec.ts
+
+  integration/
+    auth/
+      auth.integration.spec.ts
+
+  e2e/
+    payment/
+      payment.e2e.spec.ts
+
+This is already close to real-company structure.

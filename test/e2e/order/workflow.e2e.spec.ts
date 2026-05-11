@@ -21,7 +21,8 @@ test.beforeEach(async({page,loginPage,createdUser})=>{
             await expect(page.getByText(/Logged in as/i)).toBeVisible()
 })
 for(const c of cartworkflow){
-   test(`should successfully place an order for  ${c.name} `,async({page,productPage,viewCartPage,checkoutPage,paymentDonePage,paymentPage})=>{
+  const tag = c.name === 'single product' ? '@smoke' : ''
+   test(`should successfully place an order for  ${c.name} ${tag}  @regression @smoke @e2e  @order `,async({page,productPage,viewCartPage,checkoutPage,paymentDonePage,paymentPage})=>{
       await test.step(`add products to cart using ${c.name} `,async()=>{
             await addMultipleProducts(c.data,productPage,page)
          const cartItems = await viewCartPage.getCartItems()

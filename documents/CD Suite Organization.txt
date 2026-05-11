@@ -1,0 +1,48 @@
+2. CI/CD Suite Organization :  CI/CD means your tests run automatically in GitHub Actions.
+
+Professional idea :  Do not run everything the same way.
+
+Split tests by purpose: 
+-PR → smoke tests
+-Nightly → regression tests
+-Feature/debug → specific folder or tag
+-Release → full regression + e2e
+--------
+Basic CI jobs
+1. Smoke job : Fast check on every push/PR: 
+- name: Run smoke tests
+  run: npx playwright test --grep @smoke
+Purpose:  Is the app basically working?
+
+2. API job :  Run API tests separately:
+- name: Run API tests
+  run: npx playwright test tests/api
+Purpose:  Check backend endpoints quickly
+
+3. UI job : Run UI feature tests:
+- name: Run UI tests
+  run: npx playwright test tests/ui
+
+4. Integration job : Run cross-layer tests:
+- name: Run integration tests
+  run: npx playwright test tests/integration
+
+5. E2E job : Run full journeys:
+
+- name: Run E2E tests
+  run: npx playwright test tests/e2e
+  =================
+  ==============
+Professional pipeline strategy
+-On every Pull Request :  npx playwright test --grep @smoke
+Because PR should be fast.
+
+-On merge to main :
+npx playwright test tests/api
+npx playwright test tests/ui
+
+-Nightly : Run full regression:
+npx playwright test --grep @regression
+
+-Before release 
+npx playwright test --grep "@regression|@e2e"

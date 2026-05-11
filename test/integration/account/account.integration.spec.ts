@@ -9,8 +9,9 @@ test.beforeEach(async({page})=>{
   })
 })
 
+//UI action → API validation    این اسمش چیه؟   Cross-layer validation
 test.describe('delete account',()=>{
- test('should delete account via UI and verify deletion via API', async({request,createdUser,deletePage,page,loggedInUser})=>{
+ test('should delete account via UI and verify deletion via API @integration @ui @account @api  @regression', async({request,createdUser,deletePage,page,loggedInUser})=>{
    console.log('url in deltee test ',page.url())
    await deletePage.clickDeleteButton()
       console.log('url in deltee test ',page.url())
@@ -18,7 +19,7 @@ test.describe('delete account',()=>{
    await expect(deletePage.getAccountDeleteHeader()).toContainText('Account Deleted!')
    // await deletePage.continueButtonClick()
    //verify using api
-await test.step('verify login after deletion via api', async () => {
+await test.step('verify login after deletion via api ', async () => {
   const result = await verifyLogin(request, {
     email: createdUser.user.email,
     password: createdUser.user.password

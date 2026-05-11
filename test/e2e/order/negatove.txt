@@ -1,0 +1,76 @@
+A negative test checks:
+
+“Does the system correctly reject invalid or forbidden behavior?”
+
+In a negative test:
+
+👉 user does something WRONG
+👉 system should PREVENT it
+------------------
+❌ NOT Negative Tests
+
+These confuse many people.
+
+🛒 Empty cart
+remove all items → cart becomes empty
+
+👉 This is VALID behavior
+👉 System is NOT rejecting anything
+
+❌ NOT negative
+
+🔄 Refresh behavior
+payment fields cleared after refresh
+
+👉 Expected system behavior
+❌ NOT negative
+
+📦 Confirmation visible
+order confirmation still visible after refresh
+
+👉 Still valid
+❌ NOT negative
+
+🧠 Golden Rule
+
+Ask:
+
+“Is the system blocking/rejecting invalid behavior?”
+
+If YES → @negative
+If NO → not negative
+------------------------------------------
+
+
+🧠 Categories of Negative Tests
+1️⃣ Validation Negative
+Invalid input format.
+Examples:
+
+empty email
+invalid card number
+special characters
+too short
+
+2️⃣ Business Rule Negative
+System rules.
+Examples:
+
+duplicate email
+checkout with empty cart
+deleted user login
+
+3️⃣ Access / Security Negative
+Unauthorized actions.
+
+Examples:
+
+guest user accesses payment
+logged-out user accesses checkout
+
+4️⃣ State Negative
+Wrong application state.
+Examples:
+
+paying before checkout
+submitting payment twice

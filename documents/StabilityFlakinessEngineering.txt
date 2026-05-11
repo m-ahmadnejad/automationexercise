@@ -1,0 +1,65 @@
+Stability & Flakiness Engineering
+A test that:  passes sometimes , fails sometimes
+is called: flaky
+Flaky tests are one of the biggest problems in automation teams.
+
+
+2. Common Causes of Flakiness
+---Timing Issues
+Example:
+await page.click(...)
+await expect(text).toBeVisible()
+
+But UI updates slowly.
+Result: sometimes element not ready
+
+---Shared State
+Example:
+shared account
+shared cart
+leftover storage
+
+---Dynamic UI
+Example:
+ads
+animations
+loading spinners
+delayed rendering
+
+---Weak Selectors
+
+BAD:
+
+div > div:nth-child(3)
+
+GOOD:
+
+getByRole()
+getByTestId()
+===========================
+==========================
+Race Conditions
+BAD:
+
+await button.click()
+await page.waitForURL(...)
+Sometimes navigation starts before waiting.
+
+GOOD:
+await Promise.all([
+  page.waitForURL(...),
+  button.click()
+])
+--------------------------------------------
+--------------------------------------------
+Real-world automation problems are usually:
+
+flaky tests
+timing issues
+unstable environments
+shared state
+CI failures
+race conditions
+bad selectors
+dynamic UI
+test data conflicts

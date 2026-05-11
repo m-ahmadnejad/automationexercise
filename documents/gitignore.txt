@@ -1,0 +1,38 @@
+✅ 1. Why we add these folders to .gitignore
+
+We ignore:
+
+node_modules/
+test-results/
+playwright-report/
+*.zip
+🔹 Because they are temporary / generated files
+Folder	Why ignore
+node_modules/	huge (100MB+), can be installed again
+test-results/	changes every test run
+playwright-report/	generated report (not source code)
+*.zip	temporary artifacts
+❌ What happens if you DON’T ignore them
+Git becomes slow 🐌
+Repo becomes HUGE 💥
+You get errors like the one you saw ❌
+CI becomes messy
+✅ Real-world rule
+
+👉 Git = only source code
+👉 NOT generated stuff
+
+✅ 2. Why your error happened
+
+You saw:
+
+No such file or directory
+
+👉 Because:
+
+Playwright created a .zip file
+Then deleted it or changed it
+Git still tried to add it
+
+💥 BOOM → error
+-------------------

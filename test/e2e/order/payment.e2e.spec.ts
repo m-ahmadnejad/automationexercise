@@ -15,9 +15,10 @@ test.beforeEach(async({page})=>{
 
     for(const c of cartworkflow)
     {
-      test(`should complete payment successfully with correct checkout details for ${c.name}`, async ({loggedInUser,page,productPage,viewCartPage,checkoutPage,paymentDonePage,paymentPage}) => {
-          await test.step(` add ${c.name}, and proceed to checkout , ${c.data}`, async () => {
-                  await addToCartAndProceedToCheckout(productPage, viewCartPage, c.data)
+      const tag = c.name === 'single product' ? '@smoke' : ''
+      test(`should complete payment successfully with correct checkout details for ${c.name}  @payment @smoke  @e2e @regression ${tag}`, async ({loggedInUser,page,productPage,viewCartPage,checkoutPage,paymentDonePage,paymentPage}) => {
+          await test.step(` add ${c.name}, and proceed to checkout, ${c.data}`, async () => {
+                  await addToCartAndProceedToCheckout(productPage, viewCartPage, c.data,page)
                                      })
           await test.step(`verify checkout review ${c.name} and navigate to payment page`, async () => {
                   await verifyCheckoutReview(checkoutPage,c.data)
@@ -32,7 +33,7 @@ test.beforeEach(async({page})=>{
           await test.step('fill payment details and confirm payment', async () => {
                   await submitPayment(paymentPage,validPaymentDetails)
   })
-          await test.step('verify order is placed successfully', async () => {
+          await test.step('verify order is placed successfully ', async () => {
                   await expect(page).toHaveURL(/payment_done\/\d+/)
                   await expect(paymentDonePage.getConfirmationMessage()).toBeVisible()
                   await expect(paymentDonePage.getOrderPlacedMessage()).toBeVisible()

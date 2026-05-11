@@ -1,0 +1,51 @@
+🎯 What is a Negative Test?
+“How safely and correctly the system handles invalid, unexpected, forbidden, or dangerous situations.”
+----
+🧠 Important mindset shift
+
+Positive testing asks:Does the system work?
+
+Negative testing asks:Does the system fail correctly?
+----------------
+-------
+🧠 Main Types of Negative Testing
+
+1️⃣ Validation Negative Testing
+🎯 Goal : = Check invalid input values.
+empty email
+invalid card number
+too short password
+letters in numeric field
+special characters
+invalid format
+
+🧠 Common subcategories
+Type	Example
+Empty	blank input
+Format	invalid email
+Length	too short
+Type	letters in number
+Range	month 15
+Expired	old card
+
+2️⃣ Business Rule Negative Testing
+🎯 Goal : Check system business logic/rules.
+duplicate email
+checkout with empty cart
+pay before checkout
+deleted user login
+buy out-of-stock item
+
+3️⃣ Access / Authorization Negative Testing
+🎯 Goal:Check security/access protection.
+guest accesses payment
+logged-out user accesses checkout
+user accesses admin page
+expired session still works
+
+4️⃣ State-Based Negative Testing
+🎯 Goal:Check invalid application state transitions.
+submit payment twice
+refresh payment page
+back button after logout
+pay after order already completed

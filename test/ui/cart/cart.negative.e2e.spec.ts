@@ -16,7 +16,7 @@ await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 15000 })
 
 test.describe('cart negative scenarios',()=>{
 
-    test('should show empty cart state and hide checkout button after removing all items',async({page,productPage,viewCartPage,loggedInUser})=>{
+    test('should show empty cart state and hide checkout button after removing all items @cart @ui @regression ',async({page,productPage,viewCartPage,loggedInUser})=>{
             console.log('START TEST URL:', page.url())
        
     await test.step('ensure cart is empty',async({})=>{
@@ -41,15 +41,15 @@ test.describe('cart negative scenarios',()=>{
              await expectEmptyCartState(viewCartPage, page)
 })
 })
-    test('should show empty cart state and hide checkout button after removing the only product',async({page,productPage,viewCartPage,loggedInUser})=>{
+    test('should show empty cart state and hide checkout button after removing the only product @cart @regression @ui',async({page,productPage,viewCartPage,loggedInUser})=>{
     await test.step('ensure cart is empty',async({})=>{
         console.log('ensure cart is empty')
          await viewCartPage.goToCart()
          await viewCartPage.removeAllItems()
 
     })
-    await test.step('add multiple items to cart and remove all', async () => { 
-        console.log('add multiple items to cart')
+    await test.step('add one items to cart and remove all', async () => { 
+        console.log('add one items to cart')
         await page.goto('https://automationexercise.com/products')
         await addMultipleProducts(singleCartItems,productPage,page)
         console.log('****************')

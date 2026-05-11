@@ -18,7 +18,7 @@ test.beforeEach(async({page})=>{
 })
 
 test.describe('payment access control',()=>{
-        test.fixme('logged in user cannot access payment page directly before checkout',async({page,loggedInUser,loginPage,productPage})=>{
+        test.fixme('logged in user cannot access payment page directly before checkout @auth   @payment @ui  @regression  @negative',async({page,loggedInUser,loginPage,productPage})=>{
             await test.step('login with existing user ',async()=>{
 
                  await addMultipleProducts(multipleCartItems,productPage,page)
@@ -27,9 +27,9 @@ test.describe('payment access control',()=>{
                  await expect(page).toHaveURL(/checkout|cart/)
         })
     })
-        test.fixme('should NOT allow direct access to payment page after logout ',async({page,loggedInUser,loginPage,productPage,viewCartPage,checkoutPage,logOutPage})=>{
+        test.fixme('should NOT allow direct access to payment page after logout @auth  @payment @ui @regression  @negative ',async({page,loggedInUser,loginPage,productPage,viewCartPage,checkoutPage,logOutPage})=>{
 
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
             await logOutPage.logOut()
             console.log(' First URL : URL&*&*&*&*',page.url())
             await expect(page).toHaveURL(/login/)
@@ -39,7 +39,7 @@ test.describe('payment access control',()=>{
             await expect(page).toHaveURL(/login/)
 })
 })
-test.describe('payment required field validation',()=>{
+test.describe('payment required field validation ',()=>{
     type paymentTestCases ={name:string,data:{payment:PaymentDetail,expectedMessage:string},field:(p:PaymentPage)=>Locator} 
         const cases:paymentTestCases[] =[
                 {name:'Name on Card', data:{payment:invalidPayment.emptyNameOnCard,expectedMessage:'Please fill'}, field: (p) => p.nameOnCardInput},
@@ -49,8 +49,8 @@ test.describe('payment required field validation',()=>{
                 {name:'Exp Year', data:{payment:invalidPayment.emptyExpYear,expectedMessage:'Please fill'}, field: (p) => p.expYearInput}
                                             ]
                  for(const c of cases){
-                     test(`should not allow payment when ${c.name} is empty`, async({page,paymentPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-                          await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
+                     test(`should not allow payment when ${c.name} is empty   @payment  @ui @regression @negative`, async({page,paymentPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
+                          await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
                           await submitPayment(paymentPage,c.data.payment)
                           await expectNativeFieldValidation(c.field(paymentPage),c.data.expectedMessage)
                           await expect(page).toHaveURL(/payment/)
@@ -58,7 +58,7 @@ test.describe('payment required field validation',()=>{
                                       }
 })
   test.describe('payment submission behavior',()=>{
-        test('should not create duplicate payment submission after repeated pay attempt',async({page,paymentPage,paymentDonePage,loggedInUser,goToPaymentAfterCheckout})=>{
+        test('should not create duplicate payment submission after repeated pay attempt  @payment @ui  @regression  @negative',async({page,paymentPage,paymentDonePage,loggedInUser,goToPaymentAfterCheckout})=>{
             let orderRequest =0
             page.on('request',request=>{if (request.url().includes('/payment') && (request.method()==='POST')){
                         orderRequest++
@@ -80,8 +80,8 @@ test.describe('payment required field validation',()=>{
                
 })
         
-        test('order confirmation remains visible after refreshing payment done page',async({page,productPage,viewCartPage,checkoutPage,paymentPage,paymentDonePage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
+        test('order confirmation remains visible after refreshing payment done page @payment  @regression @ui  @negative',async({page,productPage,viewCartPage,checkoutPage,paymentPage,paymentDonePage,loggedInUser})=>{
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
             await completeWorkFlow(paymentPage,validPaymentDetails)
             await page.reload()
             await expect(page).toHaveURL(/payment_done\/\d+/)
@@ -90,8 +90,8 @@ test.describe('payment required field validation',()=>{
         })
     
  test.describe('payment persistence and navigation behavior',()=>{
-        test.fixme('should not allow access to payment page through browser back after logout',async({page,logOutPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
+        test.fixme('should not allow access to payment page through browser back after logout @auth @payment @regressione @ui @negative',async({page,logOutPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
             await expect(page).toHaveURL(/payment/)
             await logOutPage.logOut()
             console.log(' First URL : URL&*&*&*&*',page.url())
@@ -101,8 +101,8 @@ test.describe('payment required field validation',()=>{
             await expect(page).not.toHaveURL(/payment/)
             await expect(page).toHaveURL(/login/)
 })
-        test.fixme('should clear payment details after navigating back from confirmation page',async({page,paymentPage,paymentDonePage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
+        test.fixme('should clear payment details after navigating back from confirmation page @payment @regression @ui @negative',async({page,paymentPage,paymentDonePage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
             await paymentPage.fillPaymentDetails(validPaymentDetails)
             console.log('valid payment deatail',validPaymentDetails)
             await expectPaymentFieldsToBeFilled(paymentPage)
@@ -113,8 +113,8 @@ test.describe('payment required field validation',()=>{
             await expect(page).toHaveURL(/payment/)
             await expectPaymentDetailsToBeCleared(paymentPage)
 })    
-    test('should clear payment details after refreshing payment page',async({page,paymentPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
+    test('should clear payment details after refreshing payment page  @regression  @payment  @ui    @negative',async({page,paymentPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
             await paymentPage.fillPaymentDetails(validPaymentDetails)
             await page.reload()
             await expect(page).toHaveURL(/payment/)

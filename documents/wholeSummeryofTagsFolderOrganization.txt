@@ -1,0 +1,149 @@
+Test Structure Summary
+test/ ├── api/ ├── ui/ ├── e2e/ └── integration/
+
+1. API Tests
+Folder:
+test/api/
+Purpose:
+test backend endpoints directly
+Examples:
+
+
+verify login API
+
+
+create account API
+
+
+delete account API
+
+
+Usually tags:
+@api@auth@account@negative@regression@smoke
+No browser needed.
+
+2. UI Tests
+Folder:
+test/ui/
+Purpose:
+single page or feature validation through browser
+Examples:
+
+
+login validation
+
+
+signup validation
+
+
+field errors
+
+
+button state
+
+
+cart item display
+
+
+Usually tags:
+@ui@auth@account@cart@negative@regression
+Usually smaller scope.
+
+3. E2E Tests
+Folder:
+test/e2e/
+Purpose:
+full real user workflow
+Examples:
+
+
+login → add to cart → payment
+
+
+signup → checkout
+
+
+place order flow
+
+
+Usually tags:
+@e2e@payment@checkout@order@regression@smoke
+Important:
+@e2e already implies UI/browser
+So:
+@ui
+is usually unnecessary there.
+
+4. Integration Tests
+Folder:
+test/integration/
+Purpose:
+mix multiple layers/systems together
+Examples:
+
+
+create user via API → login via UI
+
+
+delete account via API → verify login blocked in UI
+
+
+signup via UI → verify via API
+
+
+Usually tags:
+@integration@api@ui@auth@account@regression
+Important:
+integration = cross-layer validation
+
+Tag Philosophy
+Feature tags
+What business area?
+@auth@account@cart@payment@checkout@order
+
+Layer tags
+How is it tested?
+@api@ui@e2e@integration
+
+Purpose tags
+Why does test exist?
+@smoke@regression@negative@sanity
+
+Smoke vs Regression
+Smoke
+Critical fast checks.
+Example:
+can logincan place ordersite works
+
+Regression
+Broad protection against old bugs breaking.
+Usually:
+most stable tests are regression
+
+Negative
+Invalid behavior validation.
+Examples:
+wrong passwordinvalid paymentempty fields
+
+Professional Folder Rule
+Organize mostly by:
+1. layer/type2. business domain
+Example:
+test/ ├── api/auth/ ├── ui/auth/ ├── ui/payment/ ├── e2e/order/ └── integration/auth/
+
+Biggest Concept You Learned
+Folder = where/how test belongsTags = extra searchable metadata
+A test can have:
+
+
+one folder
+
+
+many tags
+
+
+Example:
+test/integration/auth/deleteAccount.integration.spec.ts
+with tags:
+@integration @api @ui @auth @negative @regression
+That is completely professional.

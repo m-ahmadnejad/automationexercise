@@ -1,0 +1,28 @@
+2. HTML Report
+
+Playwright generates: playwright-report/
+Open with: npx playwright show-report
+
+This gives:
+passed/failed tests
+steps
+errors
+screenshots
+traces
+
+3. Trace Viewer (VERY important)
+Enable:  trace: 'on-first-retry'
+or: trace: 'retain-on-failure'
+
+Then failed tests record:
+DOM snapshots
+clicks
+network
+console
+timeline
+
+You can literally:
+
+rewind the failed test
+
+Professionally this is HUGE.

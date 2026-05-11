@@ -1,0 +1,135 @@
+Test Execution Strategy.
+
+This means:  deciding which tests to run, when, and why.
+
+1. Local execution
+When you are developing/debugging: 
+npx playwright test path/to/file.spec.ts
+
+or by tag:
+npx playwright test --grep @payment
+
+Use this when you are working on one feature.
+
+2. Smoke execution
+Run fast critical tests:
+
+npx playwright test --grep @smoke
+
+Purpose:  “Is the app basically working?”
+
+Examples:
+login works
+signup works
+simple order flow works
+
+Run:
+before pushing code
+on every PR
+after deployment
+----
+3. Feature execution
+Run tests for one area:
+
+npx playwright test --grep @auth
+npx playwright test --grep @payment
+npx playwright test --grep @cart
+
+Purpose:   “I changed this feature, so I run related tests.”
+
+Example:
+If you changed payment page:
+
+npx playwright test --grep @payment
+----
+4. Negative execution
+Run all invalid/blocked scenarios:
+
+npx playwright test --grep @negative
+
+Purpose:  “Does the system safely reject bad behavior?”
+Useful before release or after validation/security changes.
+---
+5. E2E execution
+
+Run full journey tests:
+
+npx playwright test --grep @e2e
+
+Purpose:  “Can real user workflows still work?”
+
+Usually slower than smoke.
+----
+6. Full regression execution
+
+Run everything important:
+
+npx playwright test --grep @regression
+
+Purpose:  “Did anything break?”
+
+Run:
+
+before release
+nightly
+after big changes
+
+
+
+Simple professional execution plan
+Local development → run one file or one feature
+Every PR          → run @smoke
+After feature fix → run that feature tag
+Nightly           → run @regression
+Before release    → run @regression + @e2e
+-----------------------
+------------------------
+=========================================
+1. Local execution
+
+Means:   YOU run tests on your own computer during development.
+
+Example: You are working on payment page.
+
+You run: npx playwright test --grep @payment   on your laptop before pushing code.
+
+That is:local execution
+
+2. PR execution
+PR = Pull Request (GitHub/Git workflow)
+What is a PR?   You change code and ask team:  "Please review my changes before merging into main project."
+
+That request is called: Pull Request (PR)
+Real workflow
+1. create feature branch
+2. write code
+3. push branch to GitHub
+4. open Pull Request
+5. CI automatically runs tests
+6. reviewers check code
+7. merge into main branch
+
+PR execution means:
+
+When PR is opened: GitHub Actions automatically runs tests like:
+
+npx playwright test --grep @smoke
+
+to check:
+
+Did new code break critical flows?
+--------------------]-]]]]]]]]]]]]]]]
+
+On every PR  :Run:@smoke
+because:
+-fast
+-critical
+-quick feedback
+
+Nightly:Run: @regression
+because:
+-slower
+-bigger suite
+
+Before release
+Run:@e2e + @regression

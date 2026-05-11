@@ -1,0 +1,37 @@
+1. Project testing goal
+What are you testing and why?
+
+2. Folder structure
+api / ui / integration / e2e
+and what each one means.
+
+3. Tagging rules
+@auth, @account, @api, @ui, @e2e, @integration, @smoke, @regression, @negative.
+
+4. Suite strategy
+What is smoke?
+What is regression?
+When do you run them?
+
+5. Negative testing rules
+What counts as negative?
+What does NOT count as negative?
+
+6. Test data strategy
+Unique emails, fixtures, setup/cleanup, avoid shared users.
+
+7. Stability strategy
+No hard waits, stable selectors, traces, reports, isolation.
+
+8. CI/CD plan
+PR runs smoke.
+Nightly/manual runs regression.
+Artifacts/reports uploaded.
+
+9. Debugging strategy
+Use HTML report, trace viewer, screenshots on failure.
+
+--------------------
+TEST_STRATEGY.md = why and how we test
+test files = exact test implementation
+README.md = project overview and how to run

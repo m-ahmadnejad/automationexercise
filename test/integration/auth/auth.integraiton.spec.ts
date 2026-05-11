@@ -12,7 +12,7 @@ test.beforeEach(async({page})=>{
   })
 })
 test.describe('auth',()=>{
-   test('should create account via UI and verify it exists via API', async({page,signUpPage,signUpSecondPage,request})=>{
+   test('should create account via UI and verify it exists via API @account @integration  @api @ui @smoke @regression', async({page,signUpPage,signUpSecondPage,request})=>{
    await page.goto('/login')
    const email =  generateEmail('testUser')
    await submitSignup(signUpPage,signUpFirstStepUsers.validUser.name,email)
@@ -30,7 +30,8 @@ test.describe('auth',()=>{
    expect(response.body.responseCode).toBe(200)
    expect(response.body.message).toBe('User exists!')
    })
-test('should login via UI with existing API-created user', async({request,page,createdUser,loginPage})=>{
+   //برای این نیازی به اکانت نیست
+test('should login via UI with existing API-created user @integration @ui @api @auth  @smoke  @regression', async({request,page,createdUser,loginPage})=>{
     await page.goto('/signup')
     await loginPage.login(createdUser.user.email,createdUser.user.password)
 

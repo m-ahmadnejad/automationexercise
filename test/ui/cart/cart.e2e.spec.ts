@@ -14,7 +14,7 @@ await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 15000 })
     })
 })
 
-test('should display correct cart details for multiple products', async ({page, productPage,loggedInUser, viewCartPage }) =>{
+test('should display correct cart details for multiple products @cart @ui  @regression  ', async ({page, productPage,loggedInUser, viewCartPage }) =>{
       console.log('START TEST URL:', page.url())
        
     await test.step('ensure cart is empty',async({})=>{
@@ -37,7 +37,7 @@ test('should display correct cart details for multiple products', async ({page, 
         await expectCartItemsToMatch(cartItems, multipleCartItems)
          })
          })
-        test('should display correct cart details for single product', async ({ productPage,loggedInUser,viewCartPage }) => {
+        test('should display correct cart details for single product @ui @cart  @regression  ', async ({ productPage,loggedInUser,viewCartPage }) => {
             await test.step('add single item to cart', async () => { 
             await productPage.addToCart(multipleCartItems[0].productId) })
             await productPage.viewCart()
@@ -47,7 +47,7 @@ test('should display correct cart details for multiple products', async ({page, 
          expect(cartItems).toHaveLength(singleCartItems.length)
         await expectCartItemsToMatch(cartItems, singleCartItems)
               })   
-    test('should show empty cart state when cart has no items',async({page,viewCartPage})=>{
+    test('should show empty cart state when cart has no items @cart @regression @ui ',async({page,viewCartPage})=>{
         //await test.step('login with existing user ',async()=>{
         //    await  submitLogin(page,loginPage,{email:createdUser.user.email,password:createdUser.user.password})
         //})

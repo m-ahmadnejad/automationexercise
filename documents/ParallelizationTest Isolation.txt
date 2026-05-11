@@ -1,0 +1,55 @@
+1. Parallelization Means: running multiple tests simultaneously
+
+Why companies use it Because: 1000 tests serially = too slow   Example: 
+Without parallel: 30 minutes
+With parallel:5 minutes
+Huge CI improvement.
+
+2. Workers  Playwright uses:workers
+Example: workers: 4   means:  4 tests run simultaneously
+
+3. Why tests fail in parallel
+Because tests accidentally share:
+
+accounts
+cart state
+cookies
+localStorage
+backend data
+
+4. Test Isolation
+Professional rule:  Every test should be independent
+
+A test should:
+prepare its own data
+clean its own state
+not depend on previous tests
+
+5. Isolation Strategies
+- Unique test data
+GOOD: generate unique email
+
+You already do this.
+
+-Clear browser state
+GOOD:
+clearCookies()
+localStorage.clear()
+sessionStorage.clear()
+
+-Avoid shared users
+BAD: all tests use same account
+GOOD: fresh account per test
+
+7. Serial vs Parallel
+Parallel : Fast. Preferred.
+
+Serial:Safe but slower.
+
+Use serial ONLY when: tests truly depend on each other
+
+Example: 
+test.describe.configure({ mode: 'serial' })
+Avoid overusing serial.
+
+

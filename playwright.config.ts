@@ -13,7 +13,7 @@ export default defineConfig({
 
   use: {
     baseURL:'https://automationexercise.com/login',
-    trace: 'on',
+    trace: 'retain-on-failure',
      //storageState: 'playwright/.auth/user.json', // ✅ ADD THIS
   },
 

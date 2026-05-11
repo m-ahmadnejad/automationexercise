@@ -13,7 +13,7 @@ test.beforeEach(async ({page})=>{
               await page.goto('/signup')
               })
 test.describe('testing workflow using ui',()=>{
-  test('should allow a newly signed-up user to complete the full purchase flow via UI',async({loginPage,signUpPage,signUpSecondPage,productPage,viewCartPage,checkoutPage,page,paymentPage,paymentDonePage})=>{
+  test('should allow a newly signed-up user to complete the full purchase flow via UI @e2e @order @ui @regression',async({loginPage,signUpPage,signUpSecondPage,productPage,viewCartPage,checkoutPage,page,paymentPage,paymentDonePage})=>{
     
     const email =  generateEmail('mojgan')
     await test.step('sign up using unregieserd and valid email and password',async()=>{

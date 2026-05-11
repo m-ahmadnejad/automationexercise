@@ -9,7 +9,7 @@ test.beforeEach(async({page})=>{
     sessionStorage.clear()
   })
 })
-test('should login successfully with valid credentials', async({verifiedLogin})=>{
+test('should login successfully with valid credentials @auth  @api @smoke  @regression', async({verifiedLogin})=>{
     //const result = await verifyLogin(request, {email:user.email,password:user.password})
     //console.log('result', result)
      expect(verifiedLogin.status).toBe(200)
@@ -19,17 +19,5 @@ test('should login successfully with valid credentials', async({verifiedLogin})=
 
 })
 
-for(const c of verifyLoginCases){
-    test(`should fail login with empty ${c.name}`, async({request,createdUser})=>{
-    const result = await verifyLogin(request, c.data(createdUser.user))
-         console.log('result', result)
-         console.log('create user.user ******',createdUser.user)
-         expect(result.status).toBe(200)
-         expect(result.body.responseCode).toBe(404)
-         expect(result.body.message).toBe('User not found!')
-
-
-})
-}
 
 

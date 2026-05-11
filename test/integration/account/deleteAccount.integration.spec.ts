@@ -9,7 +9,7 @@ test.beforeEach(async({page})=>{
     sessionStorage.clear()
   })
 })
-test('should not allow login via UI after account deletion via API', async({request,page,loginPage,createdUserForDelete})=>{
+test('should not allow login via UI after account deletion via API @integration @account @ui @api @auth  @negative @regression', async({request,page,loginPage,createdUserForDelete})=>{
    //await expect(deletePage.AccountDeleteHeader()).toBeVisible()
    //await expect(deletePage.AccountDeleteHeader()).toContainText('Account Deleted!')
    //await deletePage.continueButtonClick()

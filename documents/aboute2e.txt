@@ -1,0 +1,35 @@
+E2E already implies UI/browser interaction
+
+because E2E means:
+
+simulate real user journey from start to finish
+
+Example:
+
+login → add to cart → checkout → payment → confirmation
+
+That is naturally:
+
+browser
+UI
+multiple pages
+full workflow
+
+So:
+
+@e2e
+
+already indirectly means:
+
+@ui
+
+in most teams.
+===============
+So relationship is like:
+
+E2E ⊂ UI/browser world
+
+Meaning:
+
+all E2E tests use UI/browser
+but not all UI tests are E2E
