@@ -4,8 +4,6 @@ export class LoginPage{
     constructor(private page:Page){
      
     }
-    //Use properties instead of methodsv
-
 async login(email:string, password:string){
     await this.emailInput.fill(email)
     await this.passwordInput.fill(password)

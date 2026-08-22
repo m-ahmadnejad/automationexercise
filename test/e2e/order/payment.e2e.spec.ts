@@ -15,10 +15,10 @@ test.beforeEach(async({page})=>{
 
     for(const c of cartworkflow)
     {
-      const tag = c.name === 'single product' ? '@smoke' : ''
-      test(`should complete payment successfully with correct checkout details for ${c.name}  @payment @smoke  @e2e @regression ${tag}`, async ({loggedInUser,page,productPage,viewCartPage,checkoutPage,paymentDonePage,paymentPage}) => {
+      const tag = c.name === 'single user' ? '@smoke' : ''
+      test(`should complete payment successfully with correct checkout details for ${c.name}  @payment  @e2e @regression ${tag}`, async ({loggedInUser,page,productPage,viewCartPage,checkoutPage,paymentDonePage,paymentPage}) => {
           await test.step(` add ${c.name}, and proceed to checkout, ${c.data}`, async () => {
-                  await addToCartAndProceedToCheckout(productPage, viewCartPage, c.data,page)
+                  await addToCartAndProceedToCheckout(productPage, viewCartPage, c.data)
                                      })
           await test.step(`verify checkout review ${c.name} and navigate to payment page`, async () => {
                   await verifyCheckoutReview(checkoutPage,c.data)
@@ -26,7 +26,7 @@ test.beforeEach(async({page})=>{
           await test.step('place order and navigate to payment page', async () => {
                   await checkoutPage.placeOrder()
                   await checkoutPage.handleVignetteAndRetryPlaceOrder()
-                await  page.waitForURL(/\/payment/, { timeout: 15000 }),
+                await  page.waitForURL(/\/payment/, { timeout: 15000 })
                   await expect(page).toHaveURL(/payment/)
                   await expect(paymentPage.payButton).toBeVisible()
   })

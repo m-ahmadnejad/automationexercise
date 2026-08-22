@@ -13,7 +13,7 @@ test.beforeEach(async({page})=>{
 test.describe('checkout', () => {
   test('should display correct order details on checkout page for multiple products @checkout @ui @regression', async ({page,loggedInUser,productPage,viewCartPage,checkoutPage}) => {
     await test.step('add multiple items to cart and proceed to checkout', async () => {
-      await addToCartAndProceedToCheckout(productPage, viewCartPage, multipleCartItems,page)
+      await addToCartAndProceedToCheckout(productPage, viewCartPage, multipleCartItems)
     })
 
     await test.step('verify items in checkout', async () => {
@@ -24,9 +24,9 @@ test.describe('checkout', () => {
       await expectCheckoutItemsToMatch(uiItems,multipleCartItems)
     })
   })
-  test('should display correct order details on checkout page for signle product @chekcout  @ui @regression', async ({page,loggedInUser,productPage,viewCartPage,checkoutPage}) => {
+  test('should display correct order details on checkout page for single product @checkout  @ui @regression', async ({page,loggedInUser,productPage,viewCartPage,checkoutPage}) => {
     await test.step('add single item to cart and proceed to checkout', async () => {
-      await addToCartAndProceedToCheckout(productPage, viewCartPage, singleCartItems,page)
+      await addToCartAndProceedToCheckout(productPage, viewCartPage, singleCartItems)
     })
 
     await test.step('verify item in checkout', async () => {

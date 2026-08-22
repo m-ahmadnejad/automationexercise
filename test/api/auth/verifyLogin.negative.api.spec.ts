@@ -13,14 +13,8 @@ test.beforeEach(async({page})=>{
 for(const c of verifyLoginCases){
     test(`should fail login with  @auth  @api @negative @regression ${c.name}`, async({request,createdUser})=>{
     const result = await verifyLogin(request, c.data(createdUser.user))
-         console.log('result', result)
-         console.log('create user.user ******',createdUser.user)
          expect(result.status).toBe(200)
          expect(result.body.responseCode).toBe(404)
          expect(result.body.message).toBe('User not found!')
-
-
 })
 }
-
-

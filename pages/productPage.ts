@@ -17,14 +17,11 @@ async addToCart(productId: number) {
 }
 
   async continueShopping() {
-    console.log('continueeeeeeeeeeeeee')
         await this.page.locator('.modal-content').getByRole('button',{name:'Continue Shopping'}).click()
   }
 
   async viewCart() {
-    console.log('view cart ((((((')
     await this.page.getByText('View Cart').click()
-    console.log('url after view cart click',this.page.url())
   }
 
   getAddedMessage(): Locator {

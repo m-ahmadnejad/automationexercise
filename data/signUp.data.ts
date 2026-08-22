@@ -1,3 +1,4 @@
+import { generateEmail } from "../utils/commonHelper"
 
 export const emailPrefixAndName={prefix:'Mojgan',name:'Mojgan'}
 
@@ -70,10 +71,43 @@ export const signUpFirstStepUsers:SignUpFirstStepUsers = {
     email: 'mojgan1a@yahoo.com',
   },
 }
-export type SignUpValidationData={email:string,name:string,expectedMessage:string}
-export type SignUpValidationCase ={name:string,data:SignUpValidationData,field:'email' | 'name'}
+export type SignUpFirstStepData = {
+  name: string
+  email: string
+}
 
-export const signUpValidationCases :SignUpValidationCase []=[{name:'invalid Email Address format',data:{email:'invalidEmailFormat',name:'Mojgan',expectedMessage:'@'},field:'email'},
-                       {name:'empty email',data:{email:'',name:'Mojgan',expectedMessage:'please fill'},field:'email'},
-                       {name:'empty user with valid email',data:{email:'Mojgan11a@yahoo.com',name:'',expectedMessage:'please fill'},field:'name'}
+export function buildSignUpFirstStepData(overrides?: Partial<SignUpFirstStepData>): SignUpFirstStepData {
+  return {
+    name: signUpFirstStepUsers.validUser.name,
+    email: generateEmail('mojgan'),
+    ...overrides,
+  }
+}
+
+export type Category = 'empty' | 'format' | 'business'
+
+export type InvalidSignUpCase = {
+  category: Category
+  name: string
+  data: () => SignUpFirstStepData
+  field: 'name' | 'email'
+  expectedError: string
+}
+
+export const invalidSignUpCases_empty: InvalidSignUpCase[] = [
+  {category:'empty', name:'empty name', data:()=>buildSignUpFirstStepData({name:''}), field:'name', expectedError:'fill'},
+  {category:'empty', name:'empty email', data:()=>buildSignUpFirstStepData({email:''}), field:'email', expectedError:'fill'},
+]
+
+export const invalidSignUpCases_format: InvalidSignUpCase[] = [
+  {category:'format', name:'invalid email format', data:()=>buildSignUpFirstStepData({email:'invalidEmailFormat'}), field:'email', expectedError:'@'},
+]
+
+export const invalidSignUpCases_business: InvalidSignUpCase[] = [
+  {category:'business', name:'already registered email', data:()=>buildSignUpFirstStepData({name:signUpFirstStepUsers.existingUser.name, email:signUpFirstStepUsers.existingUser.email}), field:'email', expectedError:'already exist'},
+]
+
+export const invalidSignUpCases: InvalidSignUpCase[] = [
+  ...invalidSignUpCases_empty,
+  ...invalidSignUpCases_format,
 ]

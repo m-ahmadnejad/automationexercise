@@ -1,4 +1,4 @@
-import { Locator ,expect} from "playwright/test";
+import { Locator ,expect} from "@playwright/test";
 
 
 export  function generateEmail(prefix:string):string {

@@ -1,20 +1,3 @@
-//🧠 What is Data-Driven Testing?🔥 Simple definition : 👉 Instead of writing many similar tests 👉 you write one test 👉 and run it with different data
-
-//🧠 Why do we use it? 1. Remove duplication 2. Easier to maintain 3. Better coverage 4. Cleaner code
-
-//type of data driven testing : 🧠 1. Static Data-Driven (Basic) : Hardcoded data inside test file 
-//🧠 When to use  ✔ simple validation  ✔ few test cases ✔ fast writing
-//⚠️ Downside not reusable file gets messy if large
-
-//🧠 2. External Data-Driven (Data File) ✅ What it is Move test data to separate file
-//همون بالایی فقط میره تو یه فایل دیگه
-//🧠 When to use : ✔ many test cases ✔ reuse across tests ✔ cleaner test files
-
-//🧠 3. Dynamic Data-Driven (Function-based)  What it is Data depends on runtime (like user from fixture)
-//4. table dirven testing : it includes input and expected result
-//and all other types
-
-
 export type Credential={email:string,password:string}
 export type ValidationCredentials=Credential &{message:string}
 

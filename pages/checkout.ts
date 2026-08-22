@@ -30,11 +30,13 @@ async reviewOrder(): Promise<CheckoutItem[]> {
   const totalPrice =(await wrapper.locator('.cart_total_price').textContent())?.trim() ?? ''
       console.log('total price@@@@@@@@',totalPrice)
   const finalTotalPrice = this.parseNumber(totalPrice)
+  const productId = await this.getProductId(wrapper)
       result.push({
         name: productName,
         price: finalPrice,
         quantity: productQuantity,
-        totalPrice:finalTotalPrice
+        totalPrice:finalTotalPrice,
+        productId
       })
     }
 return result
@@ -49,6 +51,16 @@ async placeOrder(){
 //global (apply everywhere)
 private parseNumber(value: string): number {
   return Number(value.replace(/[^\d]/g, ''))
+}
+
+async getProductId(row: Locator): Promise<number> {
+    const id = await row.getAttribute('id')
+    if (!id) throw new Error('Missing product id')
+
+    const match = id.match(/\d+/)
+    if (!match) throw new Error(`Invalid id format: ${id}`)
+
+    return Number(match[0])
 }
 
 async handleVignetteAndRetryPlaceOrder(){

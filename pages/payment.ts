@@ -6,12 +6,12 @@ export class PaymentPage{
  getPaymentHeading():Locator{
     return this.page.getByRole('heading', { name: 'Payment' })
 }
- async fillPaymentDetails(Payment:PaymentDetail){
-    await this.cardNumberInput.fill(Payment.cardNumber)
-    await this.nameOnCardInput.fill(Payment.nameOnCard)
-    await this.cvcInput.fill(Payment.cvc)
-    await this.expMonthInput.fill(Payment.expMonths)
-    await this.expYearInput.fill(Payment.expYear)
+ async fillPaymentDetails(payment:PaymentDetail){
+    await this.cardNumberInput.fill(payment.cardNumber)
+    await this.nameOnCardInput.fill(payment.nameOnCard)
+    await this.cvcInput.fill(payment.cvc)
+    await this.expMonthInput.fill(payment.expMonths)
+    await this.expYearInput.fill(payment.expYear)
  }
  async clickPayAndConfirm(){
     await this.page.getByRole('button',{name:'Pay and Confirm Order'}).click()

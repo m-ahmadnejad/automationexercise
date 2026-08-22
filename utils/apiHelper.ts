@@ -6,8 +6,6 @@ import { AuthPayload, AuthResult } from "../api/types/authApi.types"
 import {APIRequestContext} from '@playwright/test'
 import { deleteAccount } from "../api/client/user.api"
 
-//🔥 What pattern is this?  This is called:  👉 Test Data Builder Pattern
-
 export function buildValidCreateUserPayload(
   overrides?: Partial<CreateUserPayload>): CreateUserPayload {
   const basePayload = mapSignUpToCreateUserPayLoad(generateEmail('TestUser'),'TestUser',validSignUpSecondStepData )

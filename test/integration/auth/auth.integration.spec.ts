@@ -3,6 +3,7 @@ import { validSignUpSecondStepData,signUpFirstStepUsers } from '../../../data/si
 import { verifyLogin } from '../../../api/client/user.api'
 import { generateEmail } from '../../../utils/commonHelper'
 import { submitSignup } from '../../../utils/signupHelper'
+import { deleteUserAccount } from '../../../utils/apiHelper'
 test.beforeEach(async({page})=>{
   await page.context().clearCookies()
   await page.goto('/')
@@ -19,18 +20,17 @@ test.describe('auth',()=>{
    await expect(page).toHaveURL(/\/signup/)
    await expect(signUpSecondPage.getSignupHeader()).toBeVisible()
    //page 2
-   console.log('email before signup page 2:', email)
    await signUpSecondPage.completeSignup(validSignUpSecondStepData)
    await expect(signUpSecondPage.getAccountCreatedTitle()).toBeVisible()
    await expect(page).toHaveURL(/account_created/)
-   console.log('email after signup page 2:', email)
    const response = await verifyLogin(request,{email:email,password:validSignUpSecondStepData.password})
-   console.log('email : $$$$$', email)
    expect(response.status).toBe(200)
    expect(response.body.responseCode).toBe(200)
    expect(response.body.message).toBe('User exists!')
+
+   await deleteUserAccount(request,{email:email,password:validSignUpSecondStepData.password})
    })
-   //برای این نیازی به اکانت نیست
+
 test('should login via UI with existing API-created user @integration @ui @api @auth  @smoke  @regression', async({request,page,createdUser,loginPage})=>{
     await page.goto('/signup')
     await loginPage.login(createdUser.user.email,createdUser.user.password)
@@ -42,6 +42,3 @@ test('should login via UI with existing API-created user @integration @ui @api @
     expect(result.body.message).toBe('User exists!')
 })
 })
-
-
-

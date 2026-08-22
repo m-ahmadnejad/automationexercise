@@ -22,7 +22,7 @@ export const flowTestFixtures: FlowFixtureDefs = {
     
     goToPaymentAfterCheckout:async({productPage,viewCartPage,checkoutPage},use)=>{
       await use(async()=>{
-        await addMultipleProducts(multipleCartItems,productPage,)
+        await addMultipleProducts(multipleCartItems,productPage)
         await viewCartPage.clickProceedToCheckout()
         await checkoutPage.placeOrder()
       })

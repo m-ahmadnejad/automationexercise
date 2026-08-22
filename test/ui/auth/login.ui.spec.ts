@@ -1,7 +1,5 @@
 import { test, expect } from '../../../fixtures/index'
-import { submitLogin,assertLoginNativeValidation } from '../../../utils/authHepler/authHelper'
-import {invalidCredentialCases,loginvalidationCases} from '../../../data/auth.data'
-test.describe('login validdation ',()=>{
+test.describe('login - valid credentials',()=>{
     test.beforeEach(async({page})=>{
     await page.goto('https://automationexercise.com/login')
 })

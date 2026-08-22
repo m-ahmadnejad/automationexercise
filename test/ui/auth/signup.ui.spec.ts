@@ -1,6 +1,6 @@
 import {test, expect} from '../../../fixtures/index'
-import { signUpFirstStepUsers, signUpValidationCases, validSignUpSecondStepData } from '../../../data/signUp.data'
-import { expectSignupNativeValidation, performSignupAndCheckNavigation, submitSignup } from '../../../utils/signupHelper'
+import { validSignUpSecondStepData, signUpFirstStepUsers } from '../../../data/signUp.data'
+import {performSignupAndCheckNavigation} from '../../../utils/signupHelper'
 import { generateEmail } from '../../../utils/commonHelper'
 test.describe('sign up',()=>{
        test.beforeEach(async({page})=>{
@@ -8,7 +8,7 @@ test.describe('sign up',()=>{
               })
 test(' sign up using valid data  @account @ui @smoke @regression', async({page,signUpPage,signUpSecondPage})=>{
    const email =  generateEmail('mojgan')
-   await performSignupAndCheckNavigation(page,signUpPage,signUpSecondPage.fillAccountInfo.name,email,signUpSecondPage)
+   await performSignupAndCheckNavigation(page,signUpPage,signUpFirstStepUsers.validUser.name,email,signUpSecondPage)
    await expect(signUpSecondPage.getSignupHeader()).toBeVisible()
    //page 2
    await signUpSecondPage.completeSignup(validSignUpSecondStepData)

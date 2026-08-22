@@ -4,7 +4,7 @@ import { completeWorkFlow } from '../../../utils/workflowHelper'
 import { generateEmail } from "../../../utils/commonHelper"
 import { performSignupAndCheckNavigation } from "../../../utils/signupHelper"
 import { signUpFirstStepUsers, validSignUpSecondStepData } from '../../../data/signUp.data'
-import { multipleCartItems, singleCartItems } from '../../../data/checkout.data'
+import { multipleCartItems } from '../../../data/checkout.data'
 import { expectCheckoutItemsToMatch } from '../../../utils/checkoutHelper'
 import { addMultipleProducts, expectCartItemsToMatch } from '../../../utils/cartHelper'
 
@@ -28,7 +28,7 @@ test.describe('testing workflow using ui',()=>{
       await expect(page.getByText('Logged in as ')).toBeVisible()
 })
   await test.step(`add ${multipleCartItems.length} items to cart`, async({})=>{
-    await addMultipleProducts(multipleCartItems,productPage,page)
+    await addMultipleProducts(multipleCartItems,productPage)
   })
     await test.step('view cart', async({})=>{
          const uiItem = await viewCartPage.getCartItems()

@@ -7,7 +7,6 @@ export  function expectCheckoutItemsToMatch(uiItems:CheckoutItem[],expectedItems
 
            for(const expectedItem of expectedItems  ){
                const matched =  uiItems.find(p=>p.name===expectedItem.name)
-               console.log('matched in checkout helper ********',matched)
                expect(matched, `Item not found in checkout: ${expectedItem.name}`).toBeTruthy()
                if(!matched) continue
                expect(matched.price).toBe(expectedItem.price)
@@ -20,7 +19,6 @@ export  function expectCheckoutItemsToMatch(uiItems:CheckoutItem[],expectedItems
 export async function verifyCheckoutReview(checkoutPage:CheckoutPage,expectedItems:ProductItem[]) {
     
          const uiItems = await checkoutPage.reviewOrder()
-         console.log('uitems in checkout helper********',uiItems,'lenght',uiItems.length,'lenght expected',expectedItems.length)
          expect(uiItems.length).toBe(expectedItems.length)
          expectCheckoutItemsToMatch(uiItems,expectedItems)
 }

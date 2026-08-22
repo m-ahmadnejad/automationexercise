@@ -7,7 +7,10 @@ import type { Locator } from '@playwright/test'
 import {  expectPaymentDetailsToBeCleared,expectPaymentFieldsToBeFilled, submitPayment} from '../../../utils/paymentHelper'
 import { expectNativeFieldValidation } from '../../../utils/commonHelper'
 import { addMultipleProducts } from '../../../utils/cartHelper'
-// in this test we have 2 + 1 + 1 failure >>4
+// 4 tests below are marked test.fixme(): verified by running them as real tests that they fail
+// against automationexercise.com's actual behavior (no auth guard on /payment, and the browser
+// back/forward cache restores the payment form instead of the site clearing it). These are
+// genuine limitations of the public demo site under test, not bugs in the test code.
 test.beforeEach(async({page})=>{
   await page.context().clearCookies()
   await page.goto('/')
@@ -20,21 +23,17 @@ test.beforeEach(async({page})=>{
 test.describe('payment access control',()=>{
         test.fixme('logged in user cannot access payment page directly before checkout @auth   @payment @ui  @regression  @negative',async({page,loggedInUser,loginPage,productPage})=>{
             await test.step('login with existing user ',async()=>{
-
-                 await addMultipleProducts(multipleCartItems,productPage,page)
+                 await addMultipleProducts(multipleCartItems,productPage)
                  await page.goto('/payment')
-                 console.log('url in first test******',page.url())
                  await expect(page).toHaveURL(/checkout|cart/)
         })
     })
         test.fixme('should NOT allow direct access to payment page after logout @auth  @payment @ui @regression  @negative ',async({page,loggedInUser,loginPage,productPage,viewCartPage,checkoutPage,logOutPage})=>{
 
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
             await logOutPage.logOut()
-            console.log(' First URL : URL&*&*&*&*',page.url())
             await expect(page).toHaveURL(/login/)
             await page.goto('/payment')
-            console.log('URL&*&*&*&*',page.url())
             await expect(page).not.toHaveURL('/payment')
             await expect(page).toHaveURL(/login/)
 })
@@ -50,7 +49,7 @@ test.describe('payment required field validation ',()=>{
                                             ]
                  for(const c of cases){
                      test(`should not allow payment when ${c.name} is empty   @payment  @ui @regression @negative`, async({page,paymentPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-                          await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
+                          await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
                           await submitPayment(paymentPage,c.data.payment)
                           await expectNativeFieldValidation(c.field(paymentPage),c.data.expectedMessage)
                           await expect(page).toHaveURL(/payment/)
@@ -81,7 +80,7 @@ test.describe('payment required field validation ',()=>{
 })
         
         test('order confirmation remains visible after refreshing payment done page @payment  @regression @ui  @negative',async({page,productPage,viewCartPage,checkoutPage,paymentPage,paymentDonePage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
             await completeWorkFlow(paymentPage,validPaymentDetails)
             await page.reload()
             await expect(page).toHaveURL(/payment_done\/\d+/)
@@ -90,21 +89,18 @@ test.describe('payment required field validation ',()=>{
         })
     
  test.describe('payment persistence and navigation behavior',()=>{
-        test.fixme('should not allow access to payment page through browser back after logout @auth @payment @regressione @ui @negative',async({page,logOutPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
+        test.fixme('should not allow access to payment page through browser back after logout @auth @payment @regression @ui @negative',async({page,logOutPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
             await expect(page).toHaveURL(/payment/)
             await logOutPage.logOut()
-            console.log(' First URL : URL&*&*&*&*',page.url())
             await expect(page).toHaveURL(/login/)
             await page.goBack()
-            console.log('URL&*&*&*&*',page.url())
             await expect(page).not.toHaveURL(/payment/)
             await expect(page).toHaveURL(/login/)
 })
         test.fixme('should clear payment details after navigating back from confirmation page @payment @regression @ui @negative',async({page,paymentPage,paymentDonePage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
             await paymentPage.fillPaymentDetails(validPaymentDetails)
-            console.log('valid payment deatail',validPaymentDetails)
             await expectPaymentFieldsToBeFilled(paymentPage)
             await paymentPage.clickPayAndConfirm()
             await expect(paymentDonePage.getOrderPlacedMessage()).toBeVisible()
@@ -114,7 +110,7 @@ test.describe('payment required field validation ',()=>{
             await expectPaymentDetailsToBeCleared(paymentPage)
 })    
     test('should clear payment details after refreshing payment page  @regression  @payment  @ui    @negative',async({page,paymentPage,productPage,viewCartPage,checkoutPage,loggedInUser})=>{
-            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems,page)
+            await addToCartAndPlaceOrder(productPage,viewCartPage,checkoutPage,multipleCartItems)
             await paymentPage.fillPaymentDetails(validPaymentDetails)
             await page.reload()
             await expect(page).toHaveURL(/payment/)
