@@ -1,0 +1,208 @@
+Personal study notes pulled out of the test/data/util files during the interview-portfolio cleanup.
+These used to live as inline comments scattered across the code. Moved here so the source files
+stay clean, without losing the notes themselves.
+
+=====================================================================
+1. Data-Driven Testing (was in data/auth.data.ts)
+=====================================================================
+
+What is Data-Driven Testing?
+Simple definition: Instead of writing many similar tests, you write one test and run it with
+different data.
+
+Why we use it:
+1. Remove duplication
+2. Easier to maintain
+3. Better coverage
+4. Cleaner code
+
+Types of data-driven testing:
+1. Static Data-Driven (Basic): Hardcoded data inside test file
+   When to use: simple validation, few test cases, fast writing
+   Downside: not reusable, file gets messy if large
+
+2. External Data-Driven (Data File): Move test data to a separate file
+   (همون بالایی فقط میره تو یه فایل دیگه)
+   When to use: many test cases, reuse across tests, cleaner test files
+
+3. Dynamic Data-Driven (Function-based): Data depends on runtime (like user from fixture)
+
+4. Table-driven testing: includes input and expected result
+
+
+=====================================================================
+2. page.route() / request vs response / network mocking (was in utils/info.txt)
+=====================================================================
+
+اصلاً route چیه؟
+route = یه درخواست (request) که صفحه می‌خواد به اینترنت بفرسته
+
+page میگه:
+- بده html
+- بده css
+- بده عکس
+- بده api
+- بده تبلیغ
+
+حالا page.route چی میشه؟
+page.route(...)
+یعنی: "هر request (route) که اومد → بده به من"
+
+route ≈ request
+
+ولی یه نکته کوچیک مهم داره:
+request چیه؟ خود درخواستیه که صفحه میفرسته: GET /api/products
+route چیه؟ همون request ـه + یه قابلیت اضافه: "می‌تونی جلوش رو بگیری یا تغییرش بدی"
+
+page.on('request', req => {
+  console.log(req.url())
+})
+فقط نگاه می‌کنی (فقط مانیتور)
+
+page.route('**/*', route => {
+  route.abort()
+})
+کنترل می‌کنی (می‌تونی متوقفش کنی)
+
+route is an intercepted request that you can control.
+
+این دوتا با هم: page → request → server → response → page
+route جاییه که تو وسط این جریان وایمیستی: page → 🚫 route → server
+
+route بهت اجازه میده:
+- request رو ببینی
+- جلوش رو بگیری
+- تغییرش بدی
+
+فقط نگاه کردن (request):
+page.on('request', req => { console.log(req.url()) })
+فقط می‌بینی، هیچ کاری نمی‌کنی
+
+کنترل کردن (route):
+await page.route('**/*', route => { route.abort() })
+request رو قطع می‌کنی
+
+دیدن جواب (response):
+page.on('response', res => { console.log(res.status()) })
+جواب سرور رو می‌بینی
+
+A request is sent from the browser, a response is returned from the server, and route allows us
+to intercept and control the request before it reaches the server.
+
+مثال: خودت جواب بده بدون رفتن به سرور:
+await page.route('**/api/products', async route => {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      products: [
+        { name: 'Fake Product', price: 100 }
+      ]
+    })
+  })
+})
+
+چرا این خیلی مهمه؟
+1. تست سریع‌تر: بدون اینترنت / بدون سرور
+2. تست قابل پیش‌بینی: دیگه این مشکل رو نداری که گاهی API کند بود یا data عوض شد
+3. ساختن سناریوهای خاص: مثلاً status: 500 برای تست error
+
+تفاوت متدها:
+route.continue()  ->  بذار request بره
+route.abort()      ->  قطعش کن
+route.fulfill()    ->  خودت جواب بده
+
+تشبیه ساده (سفارش غذا):
+continue -> سفارش بده به رستوران
+abort    -> کنسل کن
+fulfill  -> خودت غذا رو بپز
+
+جمله حرفه‌ای برای مصاحبه:
+route.fulfill() allows us to mock network responses and simulate backend behavior without
+calling the real API.
+
+
+=====================================================================
+3. Playwright CLI: --workers=1 / --trace=on (was in test/e2e/order/order.txt)
+=====================================================================
+
+npx playwright test test/e2e/order --workers=1 --trace=on
+
+--workers=1 (خیلی مهم):
+یعنی تست‌ها parallel اجرا نشن، دونه دونه و پشت سر هم اجرا بشن
+
+--trace=on (سوپر مهم):
+یعنی برای هر تست یه record کامل بگیر، داخلش هست:
+- همه click ها
+- navigation ها
+- network request ها
+- screenshot step-by-step
+- console log
+- DOM snapshot
+
+بعد از اجرا:
+npx playwright show-report
+روی تست fail شده کلیک کن، "Trace" رو باز کن
+
+
+=====================================================================
+4. storageState setup: global vs manual (was in test/general-setup.ts)
+=====================================================================
+
+ما دو روش برای ساخت storageState داریم:
+
+global setup: میایم مرورگر و پیج می‌سازیم، در کانفیگ می‌گیم قبل از هر ران اینو اجرا کن و نتیجه رو
+در فایل ذخیره کن، و می‌گیم که از این فایلی که ساخته شده استفاده کنه.
+
+manual setup: تقریبا همون مراحل رو داره ولی از مرورگر و پیج جدید استفاده نمیشه و نیازی هم نیست تو
+کانفیگ بگیم که گلوبال هست، بنابراین قبل از هر تست ران ساخته نمیشه؛ اگر بخوایم باید دستی اجرا کنیم
+ولی در کانفیگ می‌گیم که یوز بشه.
+
+یه حالتی هم هست که یوز رو تو تست می‌گیم که خیلی خوب نیست.
+
+storageState:
+1. global-setup.ts -> login
+2. save: page.context().storageState()
+3. config: globalSetup + storageState
+4. tests: no login -> page.goto('/')
+
+
+=====================================================================
+5. Misc small notes (were scattered as inline comments in various files)
+=====================================================================
+
+Helper Function + Collection Pattern (utils/paymentHelper.ts):
+جمع کردن Locatorها داخل یک Array برای reuse - I use a helper function to collect related locators
+into an array and iterate over them. This helps me avoid duplication, keeps tests clean, and makes
+maintenance easier if UI changes.
+
+toBeEmpty() vs toHaveValue (utils/paymentHelper.ts):
+for input use inputValue() instead of textContent()
+toBeEmpty() برای این‌ها طراحی شده: <div></div> <span></span> یعنی content داخل تگ
+
+Locator vs string assertions (utils/paymentHelper.ts):
+اگر Locator داری -> از toHave... استفاده کن
+اگر string داری -> از toBe... استفاده کن
+
+نوع                    | مثال                     | چی هست
+Locator                | field                    | اشاره به element
+Promise<string>        | field.inputValue()       | هنوز await نشده
+string                 | await field.inputValue() | مقدار واقعی
+
+evaluate() (test/e2e/order/workflow.e2e.spec.ts):
+یه جمله طلایی: evaluate یعنی "کدی که اینجا نوشتم، داخل صفحه (browser) اجرا بشه"
+
+Sanity vs cross-feature validation (test/integration/account/account.integration.spec.ts):
+Cross-feature validation: account deletion + login authentication API consistency - that's bigger
+than sanity.
+Sanity = testing AFTER a specific change. Ask yourself: did you JUST change delete account logic?
+login API behavior? If NO -> not sanity.
+(In a test where "fail" means "deleted users can still log in" - that's an AUTH problem, not
+mainly an account problem.)
+
+No account needed for this (test/integration/auth/auth.integration.spec.ts):
+برای این نیازی به اکانت نیست
+
+Test Data Builder Pattern (utils/apiHelper.ts):
+What pattern is buildValidCreateUserPayload()? This is called the Test Data Builder Pattern -
+start from valid defaults, then override only the fields you're testing.
