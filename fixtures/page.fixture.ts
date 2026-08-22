@@ -1,4 +1,4 @@
-import {test as base} from '@playwright/test'
+import {test as base, Page} from '@playwright/test'
 import { LoginPage } from '../pages/login'
 import { ProductPage } from '../pages/productPage'
 import { ViewCartPage } from '../pages/viewCart'
@@ -22,7 +22,7 @@ export type PageFixtures = {
   signUpSecondPage: SignupSecondPage,
   deletePage: DeletePage
   logOutPage:LogOutPage
-  page:Promise<void>
+  page:Page
  }
  export type PageFixtureDefs = Parameters<typeof base.extend<PageFixtures>>[0] 
  export const pageTestFixtures: PageFixtureDefs = {
@@ -61,6 +61,5 @@ export type PageFixtures = {
     await blockAds(page)
     await use(page)
   }
-  //
 
  }

@@ -1,5 +1,18 @@
 {
+  "name": "automationexercise",
+  "version": "1.0.0",
+  "description": "Playwright end-to-end and API test suite for automationexercise.com",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
-    "@playwright/test": "^1.58.2"
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
   }
 }

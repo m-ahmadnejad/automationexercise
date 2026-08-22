@@ -2,19 +2,12 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   retries: 1,
-  /*
-    fullyParallel: false,
-  workers: 1,
-  retries: 0,
-  testDir: './test',
-  */
-  //globalSetup: './global-setup', // ✅ ADD THIS
-  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }],['list']],
 
   use: {
-    baseURL:'https://automationexercise.com/login',
+    baseURL:'https://automationexercise.com',
     trace: 'retain-on-failure',
-     //storageState: 'playwright/.auth/user.json', // ✅ ADD THIS
+     screenshot: 'only-on-failure',
   },
 
   projects: [
